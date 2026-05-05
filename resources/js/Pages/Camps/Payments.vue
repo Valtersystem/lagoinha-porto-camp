@@ -237,6 +237,7 @@ const linkUser = () => {
 
                         <div class="flex items-end">
                             <PrimaryButton
+                                type="submit"
                                 :class="{ 'opacity-25': linkForm.processing }"
                                 :disabled="linkForm.processing || availableUsers.length === 0"
                             >

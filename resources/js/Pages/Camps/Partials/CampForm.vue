@@ -233,6 +233,7 @@ const submit = () => {
                 <SecondaryButton type="button">Cancelar</SecondaryButton>
             </Link>
             <PrimaryButton
+                type="submit"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >

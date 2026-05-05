@@ -254,6 +254,7 @@ const removePoint = (point: VerificationPoint) => {
                                 Ponto ativo
                             </label>
                             <PrimaryButton
+                                type="submit"
                                 :class="{ 'opacity-25': createForm.processing }"
                                 :disabled="createForm.processing"
                             >
@@ -440,6 +441,7 @@ const removePoint = (point: VerificationPoint) => {
                                 </label>
                                 <div class="flex gap-2">
                                     <PrimaryButton
+                                        type="submit"
                                         :class="{ 'opacity-25': editForm.processing }"
                                         :disabled="editForm.processing"
                                     >

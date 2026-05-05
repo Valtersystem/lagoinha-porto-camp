@@ -322,6 +322,7 @@ const isLeader = (team: CampTeam, participant: TeamParticipant) =>
 
                         <div class="flex items-end">
                             <PrimaryButton
+                                type="submit"
                                 :class="{ 'opacity-25': createForm.processing }"
                                 :disabled="createForm.processing"
                             >
@@ -503,6 +504,7 @@ const isLeader = (team: CampTeam, participant: TeamParticipant) =>
                                             Cancelar
                                         </SecondaryButton>
                                         <PrimaryButton
+                                            type="submit"
                                             :class="{ 'opacity-25': editForm.processing }"
                                             :disabled="editForm.processing"
                                         >

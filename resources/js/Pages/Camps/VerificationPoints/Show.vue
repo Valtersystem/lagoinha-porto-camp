@@ -343,6 +343,7 @@ const verifyParticipantManually = (participant: Participant) => {
                                 </label>
 
                                 <PrimaryButton
+                                    type="submit"
                                     :class="{ 'opacity-25': verifyForm.processing }"
                                     :disabled="verifyForm.processing || !point.is_active"
                                 >

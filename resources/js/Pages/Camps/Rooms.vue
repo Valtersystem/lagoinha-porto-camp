@@ -337,6 +337,7 @@ const isRoomOptionDisabled = (
 
                         <div class="flex items-end">
                             <PrimaryButton
+                                type="submit"
                                 :class="{ 'opacity-25': createForm.processing }"
                                 :disabled="createForm.processing"
                             >
@@ -541,6 +542,7 @@ const isRoomOptionDisabled = (
                                             Cancelar
                                         </SecondaryButton>
                                         <PrimaryButton
+                                            type="submit"
                                             :class="{ 'opacity-25': editForm.processing }"
                                             :disabled="editForm.processing"
                                         >
