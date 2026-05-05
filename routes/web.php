@@ -104,6 +104,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('can:manage-operations')
         ->name('camps.verification-points.show');
 
+    Route::get('camps/{camp}/verification-points/{verificationPoint}/scan', [CampVerificationPointController::class, 'scan'])
+        ->name('camps.verification-points.scan');
+
+    Route::post('camps/{camp}/verification-points/{verificationPoint}/scan', [CampVerificationPointController::class, 'selfVerify'])
+        ->name('camps.verification-points.scan.store');
+
     Route::patch('camps/{camp}/verification-points/{verificationPoint}', [CampVerificationPointController::class, 'update'])
         ->middleware('can:manage-operations')
         ->name('camps.verification-points.update');

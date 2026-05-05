@@ -30,6 +30,7 @@ interface VerificationPoint {
     last_verified_at?: string | null;
     last_verified_at_label?: string | null;
     operation_url: string;
+    participant_url: string;
 }
 
 interface TypeOption {
@@ -370,7 +371,7 @@ const removePoint = (point: VerificationPoint) => {
 
                                 <div class="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:items-start">
                                     <QrCodeBlock
-                                        :value="point.operation_url"
+                                        :value="point.participant_url"
                                         :size="108"
                                         :alt="`QR do ponto ${point.name}`"
                                     />
@@ -379,7 +380,7 @@ const removePoint = (point: VerificationPoint) => {
                                             {{ point.point_code }}
                                         </p>
                                         <p class="mt-2 text-sm text-app-subtle">
-                                            Abertura rapida do ponto operacional e identificacao para o acampamento.
+                                            Os participantes podem ler este QR para abrir o ponto e confirmar a presenca ou o check-in.
                                         </p>
                                     </div>
                                 </div>

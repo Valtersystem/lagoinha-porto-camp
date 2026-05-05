@@ -9,6 +9,7 @@ use App\Models\Camp;
 use App\Models\CampPayment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class CampVerificationManagementTest extends TestCase
@@ -43,6 +44,56 @@ class CampVerificationManagementTest extends TestCase
         $response = $this->actingAs($participant)->get(route('camps.verification-points.index', $camp));
 
         $response->assertForbidden();
+    }
+
+    public function test_participant_can_open_scan_page_for_their_point(): void
+    {
+        $participant = User::factory()->participant()->create();
+        $camp = $this->createCamp();
+        $this->linkUserToCamp($camp, $participant);
+        $point = $camp->verificationPoints()->create([
+            'name' => 'Almoco de sabado',
+            'type' => VerificationPointType::Presence->value,
+            'is_active' => true,
+            'sort_order' => 1,
+        ]);
+
+        $response = $this->actingAs($participant)->get(route('camps.verification-points.scan', [$camp, $point]));
+
+        $response
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Camps/VerificationPoints/Scan')
+                ->where('point.id', $point->id)
+                ->where('point.participant_url', route('camps.verification-points.scan', [$camp, $point]))
+                ->where('participant.user.id', $participant->id)
+                ->where('canSelfVerify', true)
+            );
+    }
+
+    public function test_participant_can_confirm_own_verification_from_scan_page(): void
+    {
+        $participant = User::factory()->participant()->create();
+        $camp = $this->createCamp();
+        $payment = $this->linkUserToCamp($camp, $participant);
+        $point = $camp->verificationPoints()->create([
+            'name' => 'Chegada principal',
+            'type' => VerificationPointType::CheckIn->value,
+            'is_active' => true,
+            'sort_order' => 1,
+        ]);
+
+        $response = $this->actingAs($participant)->post(route('camps.verification-points.scan.store', [$camp, $point]));
+
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('camp_verification_entries', [
+            'camp_verification_point_id' => $point->id,
+            'camp_payment_id' => $payment->id,
+            'user_id' => $participant->id,
+            'method' => VerificationMethod::Code->value,
+            'verified_by' => null,
+        ]);
     }
 
     public function test_administrator_can_create_verification_point(): void

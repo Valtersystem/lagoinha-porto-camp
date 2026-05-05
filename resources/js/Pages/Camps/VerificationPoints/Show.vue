@@ -30,6 +30,7 @@ interface VerificationPoint {
     last_verified_at?: string | null;
     last_verified_at_label?: string | null;
     operation_url: string;
+    participant_url: string;
 }
 
 interface Participant {
@@ -252,9 +253,8 @@ const verifyParticipantManually = (participant: Participant) => {
                     Este ponto esta inativo. Reative-o na pagina anterior para voltar a registar verificacoes.
                 </div>
 
-                <section class="grid gap-6 xl:grid-cols-[380px_1fr]">
-                    <div class="space-y-6">
-                        <div class="app-card p-5">
+                <section class="grid gap-6 xl:grid-cols-12 xl:items-stretch">
+                    <div class="app-card p-5 xl:col-span-5">
                             <div class="flex items-center gap-2 text-app-text">
                                 <ClipboardCheck class="h-5 w-5 text-app-soft" aria-hidden="true" />
                                 <h3 class="text-lg font-semibold">
@@ -351,9 +351,9 @@ const verifyParticipantManually = (participant: Participant) => {
                                     Confirmar
                                 </PrimaryButton>
                             </form>
-                        </div>
+                    </div>
 
-                        <div class="app-card p-5">
+                    <div class="app-card p-5 xl:col-span-3">
                             <div class="flex items-center gap-2 text-app-text">
                                 <QrCode class="h-5 w-5 text-app-soft" aria-hidden="true" />
                                 <h3 class="text-lg font-semibold">
@@ -366,17 +366,17 @@ const verifyParticipantManually = (participant: Participant) => {
 
                             <div class="mt-4 flex flex-col items-center gap-4">
                                 <QrCodeBlock
-                                    :value="point.operation_url"
+                                    :value="point.participant_url"
                                     :size="180"
                                     :alt="`QR do ponto ${point.name}`"
                                 />
                                 <p class="text-center text-sm text-app-subtle">
-                                    Acesso rapido ao ponto operacional deste momento.
+                                    Os participantes podem ler este QR para abrir este ponto e confirmar a presenca ou o check-in.
                                 </p>
                             </div>
-                        </div>
+                    </div>
 
-                        <dl class="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+                    <dl class="grid gap-3 sm:grid-cols-3 xl:col-span-4">
                             <div class="app-card p-4">
                                 <dt class="text-sm text-app-soft">Pessoas</dt>
                                 <dd class="mt-1 text-2xl font-semibold text-app-text">
@@ -395,221 +395,218 @@ const verifyParticipantManually = (participant: Participant) => {
                                     {{ summary.pending_people }}
                                 </dd>
                             </div>
-                        </dl>
+                    </dl>
+                </section>
+
+                <section class="app-card overflow-hidden">
+                    <div class="border-b border-app-border px-5 py-4">
+                        <h3 class="text-lg font-semibold text-app-text">
+                            Ultimas verificacoes
+                        </h3>
+                        <p class="mt-1 text-sm text-app-subtle">
+                            Nome, hora, telefone, equipe e quarto no momento do registo.
+                        </p>
                     </div>
 
-                    <div class="space-y-6">
-                        <section class="app-card overflow-hidden">
-                            <div class="border-b border-app-border px-5 py-4">
-                                <h3 class="text-lg font-semibold text-app-text">
-                                    Ultimas verificacoes
-                                </h3>
+                    <div
+                        v-if="recentEntries.length === 0"
+                        class="px-5 py-10 text-center text-sm text-app-subtle"
+                    >
+                        Ainda nao existem verificacoes neste ponto.
+                    </div>
+
+                    <div v-else class="divide-y divide-app-border">
+                        <article
+                            v-for="entry in recentEntries"
+                            :key="entry.id"
+                            class="grid gap-4 px-5 py-4 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]"
+                        >
+                            <div>
+                                <Link
+                                    :href="route('users.show', entry.user.id)"
+                                    class="font-semibold text-app-text hover:text-brand-800"
+                                >
+                                    {{ entry.user.name }}
+                                </Link>
                                 <p class="mt-1 text-sm text-app-subtle">
-                                    Nome, hora, telefone, equipe e quarto no momento do registo.
+                                    {{ entry.user.phone ?? entry.user.email }}
                                 </p>
                             </div>
 
-                            <div
-                                v-if="recentEntries.length === 0"
-                                class="px-5 py-10 text-center text-sm text-app-subtle"
-                            >
-                                Ainda nao existem verificacoes neste ponto.
+                            <div>
+                                <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
+                                    Hora
+                                </dt>
+                                <dd class="mt-2 text-sm font-semibold text-app-text">
+                                    {{ entry.verified_at_label }}
+                                </dd>
+                                <p class="mt-1 text-xs text-app-soft">
+                                    {{ entry.method_label }}
+                                </p>
                             </div>
 
-                            <div v-else class="divide-y divide-app-border">
-                                <article
-                                    v-for="entry in recentEntries"
-                                    :key="entry.id"
-                                    class="grid gap-4 px-5 py-4 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]"
-                                >
-                                    <div>
-                                        <Link
-                                            :href="route('users.show', entry.user.id)"
-                                            class="font-semibold text-app-text hover:text-brand-800"
-                                        >
-                                            {{ entry.user.name }}
-                                        </Link>
-                                        <p class="mt-1 text-sm text-app-subtle">
-                                            {{ entry.user.phone ?? entry.user.email }}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
-                                            Hora
-                                        </dt>
-                                        <dd class="mt-2 text-sm font-semibold text-app-text">
-                                            {{ entry.verified_at_label }}
-                                        </dd>
-                                        <p class="mt-1 text-xs text-app-soft">
-                                            {{ entry.method_label }}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
-                                            Equipe
-                                        </dt>
-                                        <dd class="mt-2 text-sm text-app-text">
-                                            {{ entry.user.team_name ?? 'Sem equipe' }}
-                                        </dd>
-                                        <p class="mt-1 text-xs text-app-soft">
-                                            {{ entry.user.role_name ?? 'Sem papel' }}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
-                                            Quarto
-                                        </dt>
-                                        <dd class="mt-2 text-sm text-app-text">
-                                            {{ entry.user.room_name ?? 'Sem quarto' }}
-                                        </dd>
-                                        <p class="mt-1 text-xs text-app-soft">
-                                            {{ entry.verified_by_name ?? 'Sem operador' }}
-                                        </p>
-                                    </div>
-                                </article>
+                            <div>
+                                <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
+                                    Equipe
+                                </dt>
+                                <dd class="mt-2 text-sm text-app-text">
+                                    {{ entry.user.team_name ?? 'Sem equipe' }}
+                                </dd>
+                                <p class="mt-1 text-xs text-app-soft">
+                                    {{ entry.user.role_name ?? 'Sem papel' }}
+                                </p>
                             </div>
-                        </section>
 
-                        <section class="app-card overflow-hidden">
-                            <div class="border-b border-app-border px-5 py-4">
-                                <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-app-text">
-                                            Pessoas deste acampamento
-                                        </h3>
-                                        <p class="mt-1 text-sm text-app-subtle">
-                                            Lista compacta para procura, confirmacao e marcacao manual.
-                                        </p>
-                                    </div>
+                            <div>
+                                <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
+                                    Quarto
+                                </dt>
+                                <dd class="mt-2 text-sm text-app-text">
+                                    {{ entry.user.room_name ?? 'Sem quarto' }}
+                                </dd>
+                                <p class="mt-1 text-xs text-app-soft">
+                                    {{ entry.verified_by_name ?? 'Sem operador' }}
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
 
-                                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                                        <div class="grid grid-cols-3 gap-2 rounded-xl bg-app-muted p-1">
-                                            <button
-                                                type="button"
-                                                class="rounded-lg px-3 py-2 text-sm font-medium transition"
-                                                :class="participantTab === 'pending' ? 'bg-brand-700 text-white shadow-sm' : 'bg-app-surface text-app-text hover:bg-app-muted'"
-                                                @click="participantTab = 'pending'"
-                                            >
-                                                Pendentes
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="rounded-lg px-3 py-2 text-sm font-medium transition"
-                                                :class="participantTab === 'verified' ? 'bg-brand-700 text-white shadow-sm' : 'bg-app-surface text-app-text hover:bg-app-muted'"
-                                                @click="participantTab = 'verified'"
-                                            >
-                                                Verificados
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="rounded-lg px-3 py-2 text-sm font-medium transition"
-                                                :class="participantTab === 'all' ? 'bg-brand-700 text-white shadow-sm' : 'bg-app-surface text-app-text hover:bg-app-muted'"
-                                                @click="participantTab = 'all'"
-                                            >
-                                                Todos
-                                            </button>
-                                        </div>
+                <section class="app-card overflow-hidden">
+                    <div class="border-b border-app-border px-5 py-4">
+                        <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-app-text">
+                                    Pessoas deste acampamento
+                                </h3>
+                                <p class="mt-1 text-sm text-app-subtle">
+                                    Lista compacta para procura, confirmacao e marcacao manual.
+                                </p>
+                            </div>
 
-                                        <label class="relative block min-w-[260px]">
-                                            <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-app-soft" aria-hidden="true" />
-                                            <input
-                                                v-model="participantSearch"
-                                                type="text"
-                                                class="block w-full rounded-md border-app-border py-2 pl-9 pr-3 shadow-sm focus:border-brand-500 focus:ring-brand-500"
-                                                placeholder="Buscar nome, telefone, quarto..."
-                                            />
-                                        </label>
-                                    </div>
+                            <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+                                <div class="grid grid-cols-3 gap-2 rounded-xl bg-app-muted p-1">
+                                    <button
+                                        type="button"
+                                        class="rounded-lg px-3 py-2 text-sm font-medium transition"
+                                        :class="participantTab === 'pending' ? 'bg-brand-700 text-white shadow-sm' : 'bg-app-surface text-app-text hover:bg-app-muted'"
+                                        @click="participantTab = 'pending'"
+                                    >
+                                        Pendentes
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="rounded-lg px-3 py-2 text-sm font-medium transition"
+                                        :class="participantTab === 'verified' ? 'bg-brand-700 text-white shadow-sm' : 'bg-app-surface text-app-text hover:bg-app-muted'"
+                                        @click="participantTab = 'verified'"
+                                    >
+                                        Verificados
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="rounded-lg px-3 py-2 text-sm font-medium transition"
+                                        :class="participantTab === 'all' ? 'bg-brand-700 text-white shadow-sm' : 'bg-app-surface text-app-text hover:bg-app-muted'"
+                                        @click="participantTab = 'all'"
+                                    >
+                                        Todos
+                                    </button>
+                                </div>
+
+                                <label class="relative block w-full lg:min-w-[320px]">
+                                    <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-app-soft" aria-hidden="true" />
+                                    <input
+                                        v-model="participantSearch"
+                                        type="text"
+                                        class="block w-full rounded-md border-app-border py-2 pl-9 pr-3 shadow-sm focus:border-brand-500 focus:ring-brand-500"
+                                        placeholder="Buscar nome, telefone, quarto..."
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="filteredParticipants.length === 0"
+                        class="px-5 py-10 text-center text-sm text-app-subtle"
+                    >
+                        Nenhuma pessoa encontrada com esse filtro.
+                    </div>
+
+                    <div v-else class="divide-y divide-app-border">
+                        <article
+                            v-for="participant in filteredParticipants"
+                            :key="participant.id"
+                            class="grid gap-4 px-5 py-4 xl:grid-cols-[1.2fr_0.7fr_0.8fr_0.8fr_auto]"
+                        >
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <Link
+                                        :href="route('users.show', participant.user.id)"
+                                        class="font-semibold text-app-text hover:text-brand-800"
+                                    >
+                                        {{ participant.user.name }}
+                                    </Link>
+                                    <span
+                                        v-if="participant.verification"
+                                        class="rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800"
+                                    >
+                                        {{ participant.verification.verified_at_label }}
+                                    </span>
+                                </div>
+                                <p class="mt-1 text-sm text-app-subtle">
+                                    {{ participant.user.phone ?? participant.user.email }}
+                                </p>
+                                <div class="mt-2 flex flex-wrap gap-2 text-xs text-app-soft">
+                                    <span class="rounded-full bg-app-muted px-2.5 py-1">
+                                        PIN {{ participant.user.pin ?? '----' }}
+                                    </span>
+                                    <span class="rounded-full bg-app-muted px-2.5 py-1">
+                                        {{ participant.user.role?.name ?? 'Sem papel' }}
+                                    </span>
+                                    <span class="rounded-full bg-app-muted px-2.5 py-1">
+                                        {{ participant.status_label }}
+                                    </span>
                                 </div>
                             </div>
 
-                            <div
-                                v-if="filteredParticipants.length === 0"
-                                class="px-5 py-10 text-center text-sm text-app-subtle"
-                            >
-                                Nenhuma pessoa encontrada com esse filtro.
+                            <div>
+                                <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
+                                    Equipe
+                                </dt>
+                                <dd class="mt-2 text-sm text-app-text">
+                                    {{ participant.team?.name ?? 'Sem equipe' }}
+                                </dd>
                             </div>
 
-                            <div v-else class="divide-y divide-app-border">
-                                <article
-                                    v-for="participant in filteredParticipants"
-                                    :key="participant.id"
-                                    class="grid gap-4 px-5 py-4 xl:grid-cols-[1.2fr_0.7fr_0.8fr_0.8fr_auto]"
+                            <div>
+                                <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
+                                    Quarto
+                                </dt>
+                                <dd class="mt-2 text-sm text-app-text">
+                                    {{ participant.room?.name ?? 'Sem quarto' }}
+                                </dd>
+                            </div>
+
+                            <div class="min-w-0">
+                                <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
+                                    Codigo
+                                </dt>
+                                <dd class="mt-2 truncate font-mono text-xs text-app-text">
+                                    {{ participant.user.verification_code ?? 'Sem codigo' }}
+                                </dd>
+                            </div>
+
+                            <div class="flex items-center justify-end">
+                                <PrimaryButton
+                                    :class="{ 'opacity-25': manualSubmittingId === participant.id }"
+                                    :disabled="manualSubmittingId === participant.id || !point.is_active"
+                                    @click="verifyParticipantManually(participant)"
                                 >
-                                    <div>
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <Link
-                                                :href="route('users.show', participant.user.id)"
-                                                class="font-semibold text-app-text hover:text-brand-800"
-                                            >
-                                                {{ participant.user.name }}
-                                            </Link>
-                                            <span
-                                                v-if="participant.verification"
-                                                class="rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800"
-                                            >
-                                                {{ participant.verification.verified_at_label }}
-                                            </span>
-                                        </div>
-                                        <p class="mt-1 text-sm text-app-subtle">
-                                            {{ participant.user.phone ?? participant.user.email }}
-                                        </p>
-                                        <div class="mt-2 flex flex-wrap gap-2 text-xs text-app-soft">
-                                            <span class="rounded-full bg-app-muted px-2.5 py-1">
-                                                PIN {{ participant.user.pin ?? '----' }}
-                                            </span>
-                                            <span class="rounded-full bg-app-muted px-2.5 py-1">
-                                                {{ participant.user.role?.name ?? 'Sem papel' }}
-                                            </span>
-                                            <span class="rounded-full bg-app-muted px-2.5 py-1">
-                                                {{ participant.status_label }}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
-                                            Equipe
-                                        </dt>
-                                        <dd class="mt-2 text-sm text-app-text">
-                                            {{ participant.team?.name ?? 'Sem equipe' }}
-                                        </dd>
-                                    </div>
-
-                                    <div>
-                                        <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
-                                            Quarto
-                                        </dt>
-                                        <dd class="mt-2 text-sm text-app-text">
-                                            {{ participant.room?.name ?? 'Sem quarto' }}
-                                        </dd>
-                                    </div>
-
-                                    <div class="min-w-0">
-                                        <dt class="text-xs font-medium uppercase tracking-wider text-app-soft">
-                                            Codigo
-                                        </dt>
-                                        <dd class="mt-2 truncate font-mono text-xs text-app-text">
-                                            {{ participant.user.verification_code ?? 'Sem codigo' }}
-                                        </dd>
-                                    </div>
-
-                                    <div class="flex items-center justify-end">
-                                        <PrimaryButton
-                                            :class="{ 'opacity-25': manualSubmittingId === participant.id }"
-                                            :disabled="manualSubmittingId === participant.id || !point.is_active"
-                                            @click="verifyParticipantManually(participant)"
-                                        >
-                                            <UserCheck class="mr-2 h-4 w-4" aria-hidden="true" />
-                                            {{ participant.verification ? 'Atualizar' : 'Marcar' }}
-                                        </PrimaryButton>
-                                    </div>
-                                </article>
+                                    <UserCheck class="mr-2 h-4 w-4" aria-hidden="true" />
+                                    {{ participant.verification ? 'Atualizar' : 'Marcar' }}
+                                </PrimaryButton>
                             </div>
-                        </section>
+                        </article>
                     </div>
                 </section>
             </div>

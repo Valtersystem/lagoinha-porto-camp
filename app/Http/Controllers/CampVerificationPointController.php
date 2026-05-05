@@ -119,6 +119,39 @@ class CampVerificationPointController extends Controller
         ]);
     }
 
+    public function scan(Request $request, Camp $camp, CampVerificationPoint $verificationPoint): Response
+    {
+        $this->ensurePointBelongsToCamp($camp, $verificationPoint);
+
+        $user = $request->user();
+
+        abort_unless($user !== null, 403);
+
+        $camp->load('lots');
+
+        $payment = $this->findPaymentForUser($camp, $user);
+        $entry = $payment
+            ? CampVerificationEntry::query()
+                ->where('camp_verification_point_id', $verificationPoint->id)
+                ->where('camp_payment_id', $payment->id)
+                ->first()
+            : null;
+
+        return Inertia::render('Camps/VerificationPoints/Scan', [
+            'camp' => $this->serializeCamp($camp),
+            'point' => $this->serializePoint(
+                $verificationPoint->loadCount('entries')->loadMissing('entries'),
+                $camp->payments()->count(),
+            ),
+            'participant' => $payment ? $this->serializeParticipant($payment, $entry) : null,
+            'selfVerification' => $entry ? $this->serializeEntry($entry) : null,
+            'canSelfVerify' => $payment !== null && $verificationPoint->is_active,
+            'unavailableReason' => $payment === null
+                ? 'O seu utilizador ainda nao esta vinculado a este acampamento.'
+                : null,
+        ]);
+    }
+
     public function update(Request $request, Camp $camp, CampVerificationPoint $verificationPoint): RedirectResponse
     {
         Gate::authorize('manage-operations');
@@ -188,6 +221,43 @@ class CampVerificationPointController extends Controller
             $entry->wasRecentlyCreated
                 ? 'Pessoa verificada com sucesso.'
                 : 'Verificacao atualizada com sucesso.',
+        );
+    }
+
+    public function selfVerify(Request $request, Camp $camp, CampVerificationPoint $verificationPoint): RedirectResponse
+    {
+        $this->ensurePointBelongsToCamp($camp, $verificationPoint);
+
+        $user = $request->user();
+
+        abort_unless($user !== null, 403);
+
+        if (! $verificationPoint->is_active) {
+            throw ValidationException::withMessages([
+                'point' => 'Este ponto esta inativo no momento.',
+            ]);
+        }
+
+        $payment = $this->findPaymentForUser($camp, $user);
+
+        if ($payment === null) {
+            throw ValidationException::withMessages([
+                'participant' => 'O seu utilizador nao esta vinculado a este acampamento.',
+            ]);
+        }
+
+        $entry = $this->recordVerification(
+            $verificationPoint,
+            $payment,
+            VerificationMethod::Code,
+            null,
+        );
+
+        return back()->with(
+            'status',
+            $entry->wasRecentlyCreated
+                ? 'Presenca confirmada com sucesso.'
+                : 'Presenca atualizada com sucesso.',
         );
     }
 
@@ -263,6 +333,15 @@ class CampVerificationPointController extends Controller
         }
 
         return $payment;
+    }
+
+    private function findPaymentForUser(Camp $camp, User $user): ?CampPayment
+    {
+        return CampPayment::query()
+            ->with(['user.role', 'room', 'team'])
+            ->whereBelongsTo($camp)
+            ->where('user_id', $user->id)
+            ->first();
     }
 
     private function findPaymentById(Camp $camp, mixed $paymentId): CampPayment
@@ -373,6 +452,7 @@ class CampVerificationPointController extends Controller
             'last_verified_at' => $lastVerifiedAtCarbon?->toISOString(),
             'last_verified_at_label' => $lastVerifiedAtCarbon?->format('d/m/Y H:i'),
             'operation_url' => route('camps.verification-points.show', [$point->camp_id, $point]),
+            'participant_url' => route('camps.verification-points.scan', [$point->camp_id, $point]),
         ];
     }
 
