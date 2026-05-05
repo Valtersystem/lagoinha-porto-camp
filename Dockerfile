@@ -59,6 +59,7 @@ FROM php_base AS php_runtime
 WORKDIR /var/www/html
 
 COPY docker/php/entrypoint.sh /usr/local/bin/lagoinha-porto-camp-entrypoint
+COPY docker/php/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 RUN chmod +x /usr/local/bin/lagoinha-porto-camp-entrypoint
 
 COPY . .

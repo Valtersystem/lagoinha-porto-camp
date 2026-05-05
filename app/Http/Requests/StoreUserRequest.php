@@ -26,7 +26,7 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['required', 'string', 'max:40'],
-            'photo' => ['nullable', 'image', 'max:5120'],
+            'photo' => ['nullable', 'image', 'max:10240'],
             'sex' => ['required', Rule::enum(UserSex::class)],
             'role_id' => ['required', 'integer', Rule::exists('roles', 'id')],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],

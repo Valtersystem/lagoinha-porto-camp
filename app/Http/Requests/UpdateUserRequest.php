@@ -35,7 +35,7 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users', 'email')->ignore($user),
             ],
             'phone' => ['required', 'string', 'max:40'],
-            'photo' => ['nullable', 'image', 'max:5120'],
+            'photo' => ['nullable', 'image', 'max:10240'],
             'remove_photo' => ['nullable', 'boolean'],
             'sex' => ['required', Rule::enum(UserSex::class)],
             'role_id' => ['required', 'integer', Rule::exists('roles', 'id')],
