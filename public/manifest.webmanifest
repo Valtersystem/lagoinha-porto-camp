@@ -1,0 +1,38 @@
+{
+    "name": "Lagoinha Porto Camp",
+    "short_name": "Porto Camp",
+    "description": "Gestao de acampamento, participantes, pagamentos e operacao do evento.",
+    "start_url": "/dashboard",
+    "scope": "/",
+    "display": "standalone",
+    "display_override": ["standalone", "minimal-ui", "browser"],
+    "background_color": "#f8fafc",
+    "theme_color": "#047857",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/pwa/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/pwa/maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/pwa/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/pwa/maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

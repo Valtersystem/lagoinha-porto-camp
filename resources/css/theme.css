@@ -1,0 +1,65 @@
+:root {
+    /*
+     * Tema global do sistema.
+     * Altere cores, fontes, raios e sombras aqui antes de criar estilos locais.
+     */
+
+    --font-sans: Figtree, ui-sans-serif, system-ui, sans-serif;
+    --font-heading: Figtree, ui-sans-serif, system-ui, sans-serif;
+
+    --color-brand-50: 236 253 245;
+    --color-brand-100: 209 250 229;
+    --color-brand-200: 167 243 208;
+    --color-brand-300: 110 231 183;
+    --color-brand-400: 52 211 153;
+    --color-brand-500: 16 185 129;
+    --color-brand-600: 5 150 105;
+    --color-brand-700: 4 120 87;
+    --color-brand-800: 6 95 70;
+    --color-brand-900: 6 78 59;
+
+    --color-accent-50: 255 251 235;
+    --color-accent-100: 254 243 199;
+    --color-accent-200: 253 230 138;
+    --color-accent-300: 252 211 77;
+    --color-accent-400: 251 191 36;
+    --color-accent-500: 245 158 11;
+    --color-accent-600: 217 119 6;
+    --color-accent-700: 180 83 9;
+    --color-accent-800: 146 64 14;
+    --color-accent-900: 120 53 15;
+
+    --color-neutral-50: 248 250 252;
+    --color-neutral-100: 241 245 249;
+    --color-neutral-200: 226 232 240;
+    --color-neutral-300: 203 213 225;
+    --color-neutral-400: 148 163 184;
+    --color-neutral-500: 100 116 139;
+    --color-neutral-600: 71 85 105;
+    --color-neutral-700: 51 65 85;
+    --color-neutral-800: 30 41 59;
+    --color-neutral-900: 15 23 42;
+
+    --color-success: 22 163 74;
+    --color-warning: 217 119 6;
+    --color-danger: 220 38 38;
+    --color-info: 37 99 235;
+
+    --color-page: 248 250 252;
+    --color-surface: 255 255 255;
+    --color-surface-muted: 241 245 249;
+    --color-surface-elevated: 255 255 255;
+    --color-border: 226 232 240;
+    --color-text: 15 23 42;
+    --color-text-muted: 71 85 105;
+    --color-text-soft: 100 116 139;
+
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
+    --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.06), 0 1px 3px 0 rgb(15 23 42 / 0.08);
+    --shadow-panel: 0 16px 40px -28px rgb(15 23 42 / 0.45);
+    --shadow-navigation: 0 -10px 30px -24px rgb(15 23 42 / 0.65);
+}

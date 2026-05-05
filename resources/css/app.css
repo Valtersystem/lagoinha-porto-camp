@@ -1,0 +1,87 @@
+@import './theme.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        background-color: rgb(var(--color-page));
+        color: rgb(var(--color-text));
+    }
+
+    body {
+        min-height: 100vh;
+        background-color: rgb(var(--color-page));
+        color: rgb(var(--color-text));
+        text-rendering: optimizeLegibility;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+        color: rgb(var(--color-text));
+    }
+
+    ::selection {
+        background-color: rgb(var(--color-brand-200));
+        color: rgb(var(--color-brand-900));
+    }
+
+    :focus-visible {
+        outline: 2px solid rgb(var(--color-brand-600));
+        outline-offset: 2px;
+    }
+}
+
+@layer components {
+    .app-card {
+        border: 1px solid rgb(var(--color-border));
+        border-radius: var(--radius-lg);
+        background-color: rgb(var(--color-surface));
+        box-shadow: var(--shadow-card);
+    }
+
+    .app-muted-text {
+        color: rgb(var(--color-text-muted));
+    }
+
+    .app-shell {
+        min-height: 100vh;
+        background:
+            linear-gradient(180deg, rgb(var(--color-brand-50) / 0.72), transparent 18rem),
+            rgb(var(--color-page));
+    }
+
+    .app-topbar {
+        border-bottom: 1px solid rgb(var(--color-border));
+        background-color: rgb(var(--color-surface-elevated) / 0.94);
+        backdrop-filter: blur(16px);
+    }
+
+    .app-bottom-nav {
+        border-top: 1px solid rgb(var(--color-border));
+        background-color: rgb(var(--color-surface-elevated) / 0.96);
+        box-shadow: var(--shadow-navigation);
+        backdrop-filter: blur(16px);
+    }
+
+    .app-nav-item {
+        color: rgb(var(--color-text-muted));
+        transition:
+            color 150ms ease,
+            background-color 150ms ease,
+            border-color 150ms ease;
+    }
+
+    .app-nav-item-active {
+        color: rgb(var(--color-brand-800));
+        background-color: rgb(var(--color-brand-50));
+    }
+}

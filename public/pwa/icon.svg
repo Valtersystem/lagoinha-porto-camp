@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Lagoinha Porto Camp">
+    <rect width="512" height="512" rx="112" fill="#047857"/>
+    <circle cx="382" cy="130" r="54" fill="#fbbf24"/>
+    <path d="M88 354c44-87 86-131 126-131 30 0 56 27 79 80 16-34 35-51 58-51 28 0 53 34 75 102H88Z" fill="#ecfdf5"/>
+    <path d="M124 354c33-56 63-84 90-84 28 0 55 28 81 84H124Z" fill="#10b981"/>
+    <path d="M160 386h192" stroke="#ecfdf5" stroke-width="28" stroke-linecap="round"/>
+</svg>
