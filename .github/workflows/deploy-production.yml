@@ -54,4 +54,4 @@ jobs:
             cd /srv/projects/lagoinha-porto-camp
             git fetch origin main
             git reset --hard origin/main
-            docker compose -f docker-compose.production.yml up -d --build --remove-orphans
+            docker compose --env-file .env.production -f docker-compose.production.yml up -d --build --remove-orphans

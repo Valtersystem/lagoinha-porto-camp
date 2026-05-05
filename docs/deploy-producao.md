@@ -26,7 +26,7 @@ Este projeto foi preparado para publicar na VPS seguindo o mesmo padrao dos outr
 3. Criar os volumes persistentes em `/srv/volumes/lagoinha-porto-camp`
 4. Publicar a configuracao do proxy
 5. Emitir o certificado para `lagoinha-porto-camp.sevenfaithtech.com`
-6. Subir o stack com `docker compose -f docker-compose.production.yml up -d --build`
+6. Subir o stack com `docker compose --env-file .env.production -f docker-compose.production.yml up -d --build`
 7. Ativar o timer do systemd para atualizar a branch `main` automaticamente
 
 ## Observacoes

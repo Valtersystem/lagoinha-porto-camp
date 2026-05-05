@@ -34,6 +34,7 @@ FROM node:22-alpine AS frontend
 WORKDIR /var/www/html
 
 COPY . .
+COPY --from=vendor /var/www/html/vendor /var/www/html/vendor
 
 RUN npm ci \
     && npm run build

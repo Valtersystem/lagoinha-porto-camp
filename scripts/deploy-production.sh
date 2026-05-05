@@ -5,4 +5,4 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 cd "$ROOT_DIR"
 
-docker compose -f docker-compose.production.yml up -d --build --remove-orphans
+docker compose --env-file .env.production -f docker-compose.production.yml up -d --build --remove-orphans
