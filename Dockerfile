@@ -44,7 +44,6 @@ FROM php:8.4-fpm-alpine AS php_base
 WORKDIR /var/www/html
 
 RUN apk add --no-cache \
-        icu-data-full \
         oniguruma \
     && apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
