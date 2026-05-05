@@ -1,0 +1,9 @@
+[Unit]
+Description=Atualiza o deploy do Lagoinha Porto Camp a partir da branch main
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/srv/projects/lagoinha-porto-camp
+ExecStart=/usr/bin/bash -lc 'set -euo pipefail; git fetch origin main; LOCAL="$$(git rev-parse HEAD)"; REMOTE="$$(git rev-parse origin/main)"; if [ "$$LOCAL" != "$$REMOTE" ]; then git reset --hard origin/main; docker compose -f docker-compose.production.yml up -d --build --remove-orphans; fi'

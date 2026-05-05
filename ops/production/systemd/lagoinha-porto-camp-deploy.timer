@@ -1,0 +1,10 @@
+[Unit]
+Description=Verifica atualizacoes do Lagoinha Porto Camp na branch main
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+Unit=lagoinha-porto-camp-deploy.service
+
+[Install]
+WantedBy=timers.target

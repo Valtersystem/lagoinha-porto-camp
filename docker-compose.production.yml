@@ -1,0 +1,70 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: php_runtime
+    container_name: lagoinha_porto_camp_app
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      RUN_MIGRATIONS: "true"
+      RUN_SEEDERS: "true"
+      RUN_OPTIMIZE: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - /srv/volumes/lagoinha-porto-camp/storage:/var/www/html/storage
+      - /srv/volumes/lagoinha-porto-camp/bootstrap-cache:/var/www/html/bootstrap/cache
+    networks:
+      - internal
+      - proxy
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web_runtime
+    container_name: lagoinha_porto_camp_web
+    restart: unless-stopped
+    depends_on:
+      - app
+    volumes:
+      - /srv/volumes/lagoinha-porto-camp/storage:/var/www/html/storage
+    networks:
+      - internal
+      - proxy
+
+  mysql:
+    image: mysql:8.0
+    container_name: lagoinha_porto_camp_mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - .env.production
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - /srv/volumes/lagoinha-porto-camp/mysql:/var/lib/mysql
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+  proxy:
+    external: true
+    name: proxy_default
